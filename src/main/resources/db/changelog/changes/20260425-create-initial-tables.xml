@@ -37,5 +37,19 @@
             <column name="email" value="john.doe@postly.com"/>
         </insert>
     </changeSet>
+    <changeSet id="POSTLY-003" author="glennsabales">
+        <comment>Create user_page table</comment>
+        <createTable tableName="user_page">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="user_page" baseColumnNames="user_id" referencedTableName="users" referencedColumnNames="id"
+            constraintName="fk_user_page_user" onDelete="NO ACTION"/>
+    </changeSet>
 
 </databaseChangeLog>
