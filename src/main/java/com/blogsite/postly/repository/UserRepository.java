@@ -1,13 +1,13 @@
 package com.blogsite.postly.repository;
 
-import com.blogsite.postly.model.Users;
+import com.blogsite.postly.model.domain.Users;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UserRepository extends CrudRepository<Users, Integer>
+public interface UserRepository extends CrudRepository<Users, Long>
 {
     /**
      * Retrieve all users
@@ -17,17 +17,9 @@ public interface UserRepository extends CrudRepository<Users, Integer>
     List<Users> findAllByOrderByIdAsc();
 
     /**
-     * Return user by id
-     *
-     * @param id
-     * @return specific user by id
-     */
-    Users findUserById(int id);
-
-    /**
      * Delete user by id
      *
      * @param id
      */
-    void deleteById(int id);
+    void deleteById(Long id);
 }

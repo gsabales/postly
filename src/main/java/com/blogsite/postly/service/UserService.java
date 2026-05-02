@@ -1,12 +1,14 @@
 package com.blogsite.postly.service;
 
-import com.blogsite.postly.model.Users;
+import com.blogsite.postly.model.domain.Users;
 import com.blogsite.postly.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,66 +30,50 @@ public class UserService
     /**
      * Return user by id
      *
-     * @param id
+     * @param userId
      * @return specific user by id
      */
-    public Users getUserById(int id)
+    public Users getUserById(Long userId)
     {
-        return userRepository.findUserById(id);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
 
     /**
      * Add user in User database
      *
-     * @param users
+     * @param restUser
      * @return status smessage
      */
-    public String addUser(Users users)
+    @Transactional
+    public Users addUser(Users restUser) throws IllegalArgumentException
     {
-        StringBuffer message = new StringBuffer();
-        try
+        if (restUser == null)
         {
-            userRepository.save(users);
-            message.append("Successfully added user: ")
-                    .append(users.getFirstName()).append(" ")
-                    .append(users.getLastName());
+            throw new IllegalArgumentException("User is empty");
         }
-        catch (Exception exception)
-        {
-            message.append("Error adding user: ")
-                    .append(users.getFirstName()).append(" ")
-                    .append(users.getLastName());
-            message.append("Exception: ").append(exception.getMessage());
-        }
-        return message.toString();
+        return userRepository.save(restUser);
     }
 
     /**
      * Update user by id
      *
-     * @param restUsers
-     * @param id
+     * @param restUser
+     * @param userId
      * @return Updated user if successful
      */
-    public Users updateUser(Users restUsers, int id)
+    @Transactional
+    public Users updateUser(Users restUser, Long userId) throws RuntimeException
     {
-        try
+        if (restUser == null)
         {
-            Users domainUsers = userRepository.findUserById(id);
-            if (restUsers != null && domainUsers != null)
-            {
-                domainUsers.setFirstName(restUsers.getFirstName());
-                domainUsers.setLastName(restUsers.getLastName());
-                domainUsers.setEmail(restUsers.getEmail());
-                userRepository.save(domainUsers);
-            }
-        }
-        catch (Exception exception)
-        {
-            log.error(exception.getMessage());
+            throw new IllegalArgumentException("No user exists with id: " + userId);
         }
 
-        return userRepository.findUserById(id);
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        return userRepository.save(user);
     }
 
     /**
@@ -96,19 +82,19 @@ public class UserService
      * @param Id
      * @return status message
      */
-    public String deleteById(int Id)
+    @Transactional
+    public String deleteUserById(Long userId) throws RuntimeException
     {
-        StringBuffer message = new StringBuffer();
-        try {
-            userRepository.deleteById(Id);
-            message.append("Successfully deleted user with ID: ").append(Id);
-        }
-        catch (Exception exception)
+        Optional<Users> optUser = userRepository.findById(userId);
+        if (optUser.isPresent())
         {
-            message.append("Error deleting user with ID: ").append(Id);
-            message.append("Exception: ").append(exception.getMessage());
-            log.error(exception.getMessage());
+            Users user = optUser.get();
+            userRepository.delete(user);
+            return "Successfully removed user with id: " + userId;
         }
-        return message.toString();
+        else
+        {
+            throw new RuntimeException("No user exists with id: " + userId);
+        }
     }
 }
