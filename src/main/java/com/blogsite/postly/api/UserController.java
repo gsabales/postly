@@ -1,6 +1,6 @@
 package com.blogsite.postly.api;
 
-import com.blogsite.postly.model.Users;
+import com.blogsite.postly.model.domain.Users;
 import com.blogsite.postly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/api/postly")
 @RequiredArgsConstructor
-public class PostlyController
+public class UserController
 {
     private final UserService userService;
 
@@ -32,30 +32,29 @@ public class PostlyController
     }
 
     @GetMapping(value = "/users/{id}", produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<Users> getUserById(@PathVariable int id)
+    public ResponseEntity<Users> getUserById(@PathVariable Long id)
     {
         Users user = userService.getUserById(id);
         return ResponseEntity.ok().body(user);
     }
 
     @PostMapping(value = "/users", consumes = {APPLICATION_JSON_VALUE}, produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> addUser(@RequestBody Users user)
+    public ResponseEntity<Users> addUser(@RequestBody Users user) throws IllegalArgumentException
     {
-        String message = userService.addUser(user);
-        return ResponseEntity.ok().body(message);
+        return ResponseEntity.ok().body(userService.addUser(user));
     }
 
     @PutMapping(value = "/users/{id}", consumes = {APPLICATION_JSON_VALUE}, produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<Users> updateUser(@RequestBody Users user, @PathVariable int id)
+    public ResponseEntity<Users> updateUser(@RequestBody Users user, @PathVariable Long id) throws RuntimeException
     {
         Users userBody = userService.updateUser(user, id);
         return ResponseEntity.ok().body(userBody);
     }
 
     @DeleteMapping(value = "/users/{id}")
-    public ResponseEntity<String> removeUser(@PathVariable int id)
+    public ResponseEntity<String> removeUser(@PathVariable Long id) throws RuntimeException
     {
-        String message = userService.deleteById(id);
+        String message = userService.deleteUserById(id);
         return ResponseEntity.ok().body(message);
     }
 }

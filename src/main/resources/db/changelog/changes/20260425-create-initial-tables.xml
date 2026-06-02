@@ -7,7 +7,7 @@
        http://www.liquibase.org/xml/ns/dbchangelog
        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <changeSet id="POSTLY-001" author="glennsabales">
+    <changeSet id="POSTLY-0001" author="glennsabales">
         <comment>Create users table</comment>
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -24,7 +24,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="POSTLY-002" author="glennsabales">
+    <changeSet id="POSTLY-0002" author="glennsabales">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*) FROM users WHERE first_name = 'John' AND last_name = 'Doe'
@@ -37,19 +37,24 @@
             <column name="email" value="john.doe@postly.com"/>
         </insert>
     </changeSet>
-    <changeSet id="POSTLY-003" author="glennsabales">
-        <comment>Create user_page table</comment>
-        <createTable tableName="user_page">
+    <changeSet id="POSTLY-0003" author="glennsabales">
+        <comment>Create posts table</comment>
+        <createTable tableName="post">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="user_id" type="BIGINT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
+            <column name="title" type="TEXT"/>
+            <column name="content" type="TEXT"/>
+            <column name="is_published" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
         </createTable>
         <addForeignKeyConstraint
-            baseTableName="user_page" baseColumnNames="user_id" referencedTableName="users" referencedColumnNames="id"
-            constraintName="fk_user_page_user" onDelete="NO ACTION"/>
+            baseTableName="post" baseColumnNames="user_id" referencedTableName="users" referencedColumnNames="id"
+            constraintName="fk_post_user" onDelete="NO ACTION"/>
     </changeSet>
 
 </databaseChangeLog>
