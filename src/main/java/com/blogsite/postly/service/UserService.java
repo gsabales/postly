@@ -4,13 +4,11 @@ import com.blogsite.postly.model.domain.Users;
 import com.blogsite.postly.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService
@@ -44,6 +42,7 @@ public class UserService
      *
      * @param restUser
      * @return status smessage
+     * @throws RuntimeException
      */
     @Transactional
     public Users addUser(Users restUser) throws IllegalArgumentException
@@ -61,6 +60,7 @@ public class UserService
      * @param restUser
      * @param userId
      * @return Updated user if successful
+     * @throws RuntimeException
      */
     @Transactional
     public Users updateUser(Users restUser, Long userId) throws RuntimeException
@@ -79,8 +79,9 @@ public class UserService
     /**
      * Delete user by id
      *
-     * @param Id
+     * @param userId
      * @return status message
+     * @throws RuntimeException
      */
     @Transactional
     public String deleteUserById(Long userId) throws RuntimeException
