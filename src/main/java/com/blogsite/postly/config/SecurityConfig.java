@@ -14,14 +14,16 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-
+public class SecurityConfig
+{
+    // CSRF configuration
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         http.cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }

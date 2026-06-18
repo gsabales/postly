@@ -53,7 +53,7 @@ public class PostController
     }
 
     @DeleteMapping(value = "/{userId}/post/{postId}")
-    public ResponseEntity<String> removeUser(@PathVariable Long userId,
+    public ResponseEntity<String> removePost(@PathVariable Long userId,
            @PathVariable Long postId) throws RuntimeException
     {
         String message = postService.deletePostById(userId, postId);
