@@ -22,7 +22,6 @@ public class PostService
     private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-
     /**
      * Get all posts of the original poster
      *
