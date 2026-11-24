@@ -1,6 +1,6 @@
 package com.blogsite.postly.repository;
 
-import com.blogsite.postly.model.domain.Post;;
+import com.blogsite.postly.model.domain.Post;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
